@@ -16,7 +16,7 @@ var UserSchema = new mongoose.Schema({
             validator: validator.isEmail, //validation for email using validator package
             message: '{VALUE} is not a valid Email!' // Message to display
         }
-    }, 
+    },
     password: {
         type: String,
         minlenght: 6,
@@ -73,6 +73,27 @@ UserSchema.statics.findByToken = function (token) {
         'tokens.access': access
     })
 
+}
+
+// login function
+UserSchema.statics.findByCredentials = function (email, password) {
+
+    return this.findOne({ email }).then((user) => {
+
+        if (!user) {
+            return Promise.reject() // When Email dosen't match
+        }
+
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, res) => {
+                if (res) {
+                    resolve(user)
+                } else {
+                    reject() // When Password dosen't match
+                }
+            })
+        })
+    })
 }
 
 //  Password hashing before saving to the database
