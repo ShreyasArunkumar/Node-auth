@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost/auth', (err) => {
 })
 
 // registering new user
-router.post('/', (req, res) => {
+router.post('/register', (req, res) => {
     let userData = req.body
     let user = new User(userData)
     user.save().then(() => {
@@ -39,6 +39,15 @@ router.post('/login', (req, res) => {
         res.status(400).send(e)
     })
 
+}) 
+
+//logging out the user
+router.delete('/logout', authGaurd, (req, res)=>{
+    req.user.removeToken(req.token).then(()=>{
+        res.status(200).send()
+    }, ()=>{
+        res.status(400).send()
+    })
 })
 
 

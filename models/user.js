@@ -36,11 +36,13 @@ var UserSchema = new mongoose.Schema({
     }]
 })
 
+
 // getting JSON value of only id and user
 UserSchema.methods.toJSON = function () {
     var userObject = this.toObject() // converting to the object for mongodb storage
     return _.pick(userObject, ['_id', 'email']) // plucking only id and user 
 }
+
 
 // generating user authentication token using JWT
 UserSchema.methods.generateAuthToken = function () {
@@ -94,6 +96,16 @@ UserSchema.statics.findByCredentials = function (email, password) {
             })
         })
     })
+}
+
+UserSchema.methods.removeToken = function (token) {
+
+    return this.update({
+        $pull:{
+            tokens:{token}
+        }
+    })
+    
 }
 
 //  Password hashing before saving to the database
