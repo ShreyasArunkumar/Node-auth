@@ -42,7 +42,7 @@ router.post('/login', (req, res) => {
 }) 
 
 //logging out the user
-router.delete('/logout', authGaurd, (req, res)=>{
+router.delete('/loi', authGaurd, (req, res)=>{
     req.user.removeToken(req.token).then(()=>{
         res.status(200).send()
     }, ()=>{
